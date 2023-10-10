@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.romys.model.StudentModel;
 import org.romys.payload.response.BodyResponse;
+import org.romys.payload.response.BodyResponsePage;
 import org.romys.service.StudentService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,12 +32,29 @@ public class StudentController {
         @Autowired
         private StudentService studentService;
 
-        @Operation(summary = "Get all student info", description = "API for get all student info")
+        // @Operation(summary = "Get all student info", description = "API for get all
+        // student info")
+        // @GetMapping
+        // public ResponseEntity<BodyResponse<StudentModel>> getAllStudents() {
+        // return new ResponseEntity<>(
+        // new BodyResponse<>("ok", HttpStatus.OK.value(), "all data",
+        // this.studentService.readAllStudents()),
+        // HttpStatus.OK);
+        // }
+
+        @Operation(summary = "Get student info", description = "API for get all student info")
         @GetMapping
-        public ResponseEntity<BodyResponse<StudentModel>> getAllStudents() {
+        public ResponseEntity<BodyResponse<StudentModel>> getStudents(
+                        @RequestParam(name = "page", defaultValue = "1") String page) {
+                if (page.equals("all"))
+                        return new ResponseEntity<>(
+                                        new BodyResponse<>("ok", HttpStatus.OK.value(), "all data",
+                                                        this.studentService.readAllStudents()),
+                                        HttpStatus.OK);
+
                 return new ResponseEntity<>(
-                                new BodyResponse<>("ok", HttpStatus.OK.value(), "all data",
-                                                this.studentService.readAllStudents()),
+                                new BodyResponsePage<>("ok", HttpStatus.OK.value(), "all data",
+                                                this.studentService.readStudentsPage(Integer.parseInt(page)), page),
                                 HttpStatus.OK);
         }
 
@@ -53,9 +72,9 @@ public class StudentController {
         public ResponseEntity<BodyResponse<StudentModel>> addStudent(@RequestBody(required = true) StudentModel body) {
                 this.studentService.createStudent(body);
                 return new ResponseEntity<>(
-                                new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil ditambah",
+                                new BodyResponse<>("ok", HttpStatus.CREATED.value(), "data berhasil ditambah",
                                                 new ArrayList<>(List.of(body))),
-                                HttpStatus.OK);
+                                HttpStatus.CREATED);
         }
 
         @Operation(summary = "Update student info", description = "API for update student info")

@@ -7,7 +7,10 @@ import java.util.NoSuchElementException;
 import org.romys.exception.StudentException;
 import org.romys.model.StudentModel;
 import org.romys.repository.StudentRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,6 +20,15 @@ public class StudentService {
 
     public ArrayList<StudentModel> readAllStudents() {
         return (ArrayList<StudentModel>) this.studentRepository.findAll();
+    }
+
+    public ArrayList<StudentModel> readStudentsPage(int page) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+
+        Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+        List<StudentModel> studentList = studentPage.getContent();
+
+        return new ArrayList<>(studentList);
     }
 
     public ArrayList<StudentModel> readStudentsById(long id) {
