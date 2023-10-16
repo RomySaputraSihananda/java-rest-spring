@@ -1,0 +1,100 @@
+[
+  [
+    {
+      "id": 4,
+      "date": "2023-10-11T16:08:01.000+00:00",
+      "student": {
+        "id": 1,
+        "name": "Romy Saputra Sihananda",
+        "age": 17,
+        "city": "Blitar",
+        "created": "2023-10-10T12:10:30.000+00:00"
+      }
+    }
+  ],
+
+  {
+    "id": 1,
+    "name": "Romy Saputra Sihananda",
+    "age": 17,
+    "city": "Blitar",
+    "created": "2023-10-10T12:10:30.000+00:00",
+    "absen": [
+      {
+        "keterangan": "hadir",
+        "date": "2023-10-11T16:08:01.000+00:00"
+      },
+      {
+        "keterangan": "alpha",
+        "date": "2023-10-11T16:08:01.000+00:00"
+      },
+      {
+        "keterangan": "izin",
+        "date": "2023-10-11T16:08:01.000+00:00"
+      },
+      {
+        "keterangan": "hadir",
+        "date": "2023-10-11T16:08:01.000+00:00"
+      }
+    ]
+  },
+  {
+    "status": "ok",
+    "code": 200,
+    "message": "all data",
+    "data": [
+      {
+        "id": 1,
+        "name": "Romy Saputra Sihananda",
+        "age": 17,
+        "city": "Blitar",
+        "created": "2023-10-10T12:10:30.000+00:00",
+        "absen": [
+          {
+            "keterangan": "hadir",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "alpha",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "izin",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "hadir",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "Laraine Hinako Terralyn",
+        "age": 17,
+        "city": "Macon",
+        "created": "2023-10-10T12:10:30.000+00:00",
+        "absen": [
+          {
+            "keterangan": "hadir",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "alpha",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "izin",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          },
+          {
+            "keterangan": "hadir",
+            "date": "2023-10-11T16:08:01.000+00:00"
+          }
+        ]
+      }
+    ],
+    "page": "1",
+    "dataLength": 2
+  }
+]

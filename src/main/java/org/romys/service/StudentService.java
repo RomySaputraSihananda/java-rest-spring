@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 
 import org.romys.exception.StudentException;
 import org.romys.model.StudentModel;
+import org.romys.model.DTO.StudentDTO;
 import org.romys.repository.StudentRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class StudentService {
         return (ArrayList<StudentModel>) this.studentRepository.findAll();
     }
 
-    public ArrayList<StudentModel> readStudentsPage(int page) {
-        Pageable pageable = PageRequest.of(page - 1, 10);
+    public ArrayList<StudentModel> readStudentsPage(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
 
         Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
         List<StudentModel> studentList = studentPage.getContent();
@@ -39,8 +40,8 @@ public class StudentService {
         }
     }
 
-    public void createStudent(StudentModel studentModel) {
-        this.studentRepository.save(studentModel);
+    public void createStudent(StudentDTO studentDTO) {
+        this.studentRepository.save(new StudentModel(studentDTO));
     }
 
     public ArrayList<StudentModel> updateStudent(long id, StudentModel newStudentModel) {
@@ -67,5 +68,4 @@ public class StudentService {
             throw new StudentException("student not found");
         }
     }
-
 }

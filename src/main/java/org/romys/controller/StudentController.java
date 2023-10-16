@@ -3,7 +3,10 @@ package org.romys.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.romys.model.AbsenModel;
 import org.romys.model.StudentModel;
+import org.romys.model.DTO.StudentDTO;
+import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.payload.response.BodyResponse;
 import org.romys.payload.response.BodyResponsePage;
 import org.romys.service.StudentService;
@@ -15,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,7 +47,8 @@ public class StudentController {
         @Operation(summary = "Get student info", description = "API for get all student info")
         @GetMapping
         public ResponseEntity<BodyResponse<StudentModel>> getStudents(
-                        @RequestParam(name = "page", defaultValue = "1") String page) {
+                        @RequestParam(name = "page", defaultValue = "1") String page,
+                        @RequestParam(name = "size", defaultValue = "10") int size) {
                 if (page.equals("all"))
                         return new ResponseEntity<>(
                                         new BodyResponse<>("ok", HttpStatus.OK.value(), "all data",
@@ -53,14 +56,18 @@ public class StudentController {
                                         HttpStatus.OK);
 
                 return new ResponseEntity<>(
-                                new BodyResponsePage<>("ok", HttpStatus.OK.value(), "all data",
-                                                this.studentService.readStudentsPage(Integer.parseInt(page)), page),
+                                new BodyResponsePage<>("ok", HttpStatus.OK.value(),
+                                                "data page " + page + " size " + size,
+                                                this.studentService.readStudentsPage(Integer.parseInt(page),
+                                                                size),
+                                                page),
                                 HttpStatus.OK);
         }
 
         @Operation(summary = "Get student info by id", description = "API for get student info by id")
-        @GetMapping("/{id}")
-        public ResponseEntity<BodyResponse<StudentModel>> getStudentById(@PathVariable long id) {
+        @GetMapping("/detail")
+        public ResponseEntity<BodyResponse<StudentModel>> getStudentById(
+                        @RequestParam(name = "id", defaultValue = "1") long id) {
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data by id " + id,
                                                 this.studentService.readStudentsById(id)),
@@ -69,7 +76,7 @@ public class StudentController {
 
         @Operation(summary = "Add student info", description = "API for add student info")
         @PostMapping
-        public ResponseEntity<BodyResponse<StudentModel>> addStudent(@RequestBody(required = true) StudentModel body) {
+        public ResponseEntity<BodyResponse<StudentDTO>> addStudent(@RequestBody(required = true) StudentDTO body) {
                 this.studentService.createStudent(body);
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.CREATED.value(), "data berhasil ditambah",
@@ -78,18 +85,20 @@ public class StudentController {
         }
 
         @Operation(summary = "Update student info", description = "API for update student info")
-        @PutMapping("/{id}")
-        public ResponseEntity<BodyResponse<StudentModel>> updateStudent(@PathVariable long id,
-                        @RequestBody(required = true) StudentModel body) {
+        @PutMapping
+        public ResponseEntity<BodyResponse<StudentModel>> updateStudent(
+                        @RequestParam(name = "id", defaultValue = "1", required = true) long id,
+                        @RequestBody(required = true) StudentDTO body) {
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil ditambah",
-                                                this.studentService.updateStudent(id, body)),
+                                                this.studentService.updateStudent(id, new StudentModel(body))),
                                 HttpStatus.OK);
         }
 
         @Operation(summary = "Delete student info", description = "API for delete student info")
-        @DeleteMapping("/{id}")
-        public ResponseEntity<BodyResponse<StudentModel>> deleteStudent(@PathVariable long id) {
+        @DeleteMapping
+        public ResponseEntity<BodyResponse<StudentModel>> deleteStudent(
+                        @RequestParam(name = "id", defaultValue = "1", required = true) long id) {
                 this.studentService.deleteStudent(id);
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil dihapus", null),
