@@ -1,14 +1,19 @@
-package org.romys.model;
+package org.romys.model.DAO;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.romys.model.DTO.StudentDTO;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,9 +39,13 @@ public class StudentModel {
     @Column(name = "created")
     private Timestamp created;
 
-    // @OneToMany(mappedBy = "student_id", cascade = CascadeType.ALL)
-    // @JsonIgnore
-    // private List<AbsenModel> absenList;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<AbsenModel> absen;
+
+    public StudentModel(int id) {
+        this.id = id;
+    }
 
     public StudentModel(StudentDTO studentDTO) {
         this.name = studentDTO.getName();

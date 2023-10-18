@@ -3,7 +3,8 @@ package org.romys.model.DTO;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.romys.model.StudentModel;
+import org.romys.model.DAO.AbsenModel;
+import org.romys.model.DAO.StudentModel;
 
 import lombok.Data;
 
@@ -15,15 +16,15 @@ public class StudentWithAbsenDTO {
     private String city;
     private Timestamp created;
     private int totalAbsen;
-    private List<AbsenDTO> absen;
+    private List<AbsenModel> absen;
 
-    public StudentWithAbsenDTO(StudentModel studentModel, List<AbsenDTO> absen) {
+    public StudentWithAbsenDTO(StudentModel studentModel) {
         this.id = studentModel.getId();
         this.name = studentModel.getName();
         this.age = studentModel.getAge();
         this.city = studentModel.getCity();
         this.created = studentModel.getCreated();
         this.totalAbsen = absen.size();
-        this.absen = absen;
+        this.absen = studentModel.getAbsen();
     }
 }

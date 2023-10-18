@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.romys.exception.StudentException;
-import org.romys.model.StudentModel;
+import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.StudentDTO;
 import org.romys.repository.StudentRepository;
 import org.springframework.data.domain.Pageable;

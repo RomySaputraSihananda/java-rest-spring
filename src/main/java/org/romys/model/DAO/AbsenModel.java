@@ -1,12 +1,16 @@
-package org.romys.model;
+package org.romys.model.DAO;
 
 import java.sql.Timestamp;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,15 +37,16 @@ public class AbsenModel {
     @Column(name = "date")
     private Timestamp date;
 
-    @Column(name = "student_id")
-    private int student_id;
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "student_id")
+    private StudentModel student;
 
-    // @ManyToOne
-    // @JoinColumn(name = "student_id", referencedColumnName = "id")
+    // @Column(name = "student_id")
     // private int student_id;
 
     public AbsenModel(String keterangan, int student_id) {
         this.keterangan = keterangan;
-        this.student_id = student_id;
+        this.student = new StudentModel(student_id);
     }
 }

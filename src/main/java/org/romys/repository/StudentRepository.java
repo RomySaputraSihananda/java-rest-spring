@@ -1,7 +1,6 @@
 package org.romys.repository;
 
-import org.romys.model.StudentModel;
-
+import org.romys.model.DAO.StudentModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

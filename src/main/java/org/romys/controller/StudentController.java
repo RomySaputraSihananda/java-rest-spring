@@ -3,10 +3,8 @@ package org.romys.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.romys.model.AbsenModel;
-import org.romys.model.StudentModel;
+import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.StudentDTO;
-import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.payload.response.BodyResponse;
 import org.romys.payload.response.BodyResponsePage;
 import org.romys.service.StudentService;

@@ -2,7 +2,7 @@ package org.romys.model.DTO;
 
 import java.sql.Timestamp;
 
-import org.romys.model.AbsenModel;
+import org.romys.model.DAO.AbsenModel;
 
 import lombok.Data;
 
