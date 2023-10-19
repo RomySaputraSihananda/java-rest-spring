@@ -52,4 +52,5 @@ public class StudentModel {
         this.age = studentDTO.getAge();
         this.city = studentDTO.getCity();
     }
+
 }

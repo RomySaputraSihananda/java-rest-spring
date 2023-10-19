@@ -15,13 +15,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// CREATE TABLE absen (
-//     id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
-//     date TIMESTAMP default CURRENT_TIMESTAMP,
-//     student_id int,
-//     FOREIGN KEY (student_id) REFERENCES students(id)
-// );
-
 @Data
 @NoArgsConstructor
 @Entity
@@ -41,9 +34,6 @@ public class AbsenModel {
     @ManyToOne
     @JoinColumn(name = "student_id")
     private StudentModel student;
-
-    // @Column(name = "student_id")
-    // private int student_id;
 
     public AbsenModel(String keterangan, int student_id) {
         this.keterangan = keterangan;

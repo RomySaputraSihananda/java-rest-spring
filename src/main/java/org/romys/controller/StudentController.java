@@ -44,7 +44,7 @@ public class StudentController {
 
         @Operation(summary = "Get student info", description = "API for get all student info")
         @GetMapping
-        public ResponseEntity<BodyResponse<StudentModel>> getStudents(
+        public ResponseEntity<BodyResponse<?>> getStudents(
                         @RequestParam(name = "page", defaultValue = "1") String page,
                         @RequestParam(name = "size", defaultValue = "10") int size) {
                 if (page.equals("all"))
@@ -64,7 +64,7 @@ public class StudentController {
 
         @Operation(summary = "Get student info by id", description = "API for get student info by id")
         @GetMapping("/detail")
-        public ResponseEntity<BodyResponse<StudentModel>> getStudentById(
+        public ResponseEntity<BodyResponse<?>> getStudentById(
                         @RequestParam(name = "id", defaultValue = "1") long id) {
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data by id " + id,
@@ -84,7 +84,7 @@ public class StudentController {
 
         @Operation(summary = "Update student info", description = "API for update student info")
         @PutMapping
-        public ResponseEntity<BodyResponse<StudentModel>> updateStudent(
+        public ResponseEntity<BodyResponse<?>> updateStudent(
                         @RequestParam(name = "id", defaultValue = "1", required = true) long id,
                         @RequestBody(required = true) StudentDTO body) {
                 return new ResponseEntity<>(

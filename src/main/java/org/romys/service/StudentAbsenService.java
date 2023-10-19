@@ -1,6 +1,5 @@
 package org.romys.service;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,6 +14,9 @@ import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.repository.AbsenRepository;
 import org.romys.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,8 +32,6 @@ public class StudentAbsenService {
 
     public void absen(int id, String keterangan) {
         try {
-            // if (!this.studentRepository.existsById((long) id))
-            // throw new StudentException("student not found");
             this.absenRepository.save(new AbsenModel(keterangan, id));
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
@@ -40,14 +40,6 @@ public class StudentAbsenService {
 
     public ArrayList<StudentModel> getAbsenAllPage() {
         try {
-            // ArrayList<StudentModel> students = this.studentService.readAllStudents();
-
-            // List<StudentWithAbsenDTO> studentWithAbsenDTO = students.stream()
-            // .map(student -> new StudentWithAbsenDTO(student,
-            // absenRepository.findAbsenByStudentId(student.getId())))
-            // .collect(Collectors.toList());
-
-            // return new ArrayList<StudentWithAbsenDTO>(studentWithAbsenDTO);
             return new ArrayList<StudentModel>(this.studentRepository.findAll());
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
@@ -56,7 +48,12 @@ public class StudentAbsenService {
 
     public ArrayList<StudentModel> getAbsenPage(int page, int size) {
         try {
-            return this.studentService.readStudentsPage(page, size);
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+            List<StudentModel> studentList = studentPage.getContent();
+
+            return new ArrayList<>(studentList);
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
@@ -64,17 +61,39 @@ public class StudentAbsenService {
 
     public ArrayList<StudentModel> getAbsenById(long id) {
         try {
-            // StudentModel student = this.studentRepository.findById(id).get();
-            // return new ArrayList<>(
-            // List.of(new StudentWithAbsenDTO(student,
-            // absenRepository.findAbsenByStudentId(student.getId()))));
             return new ArrayList<StudentModel>(List.of(this.studentRepository.findById(id).get()));
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
     }
 
-    public ArrayList<AbsenModel> getAbsenByRange(RangeDTO rangeDTO) {
-        return new ArrayList<>(this.absenRepository.findByDateBetween(rangeDTO.getStart(), rangeDTO.getEnd()));
+    public ArrayList<StudentWithAbsenDTO> getAbsenByRange(RangeDTO rangeDTO, int page, int size) {
+        try {
+            // return new ArrayList<>(
+            // this.studentRepository.findAllStudentsWithAbsenInDateRange(rangeDTO.getStart(),
+            // rangeDTO.getEnd()));
+            // List<StudentModel> studentsWithAbsen =
+            // studentRepository.findAllStudentsWithAbsenInDateRange(
+            // rangeDTO.getStart(),
+            // rangeDTO.getEnd());
+
+            Pageable pageable = PageRequest.of(page - 1, size);
+
+            Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+            List<StudentModel> studentList = studentPage.getContent();
+
+            List<StudentWithAbsenDTO> studentsWithAbsenInDateRangeDTO = new ArrayList<>();
+            for (StudentModel student : studentList) {
+
+                studentsWithAbsenInDateRangeDTO.add(new StudentWithAbsenDTO(student,
+                        student.getAbsen().stream()
+                                .filter(absen -> absen.getDate().after(rangeDTO.getStart())
+                                        && absen.getDate().before(rangeDTO.getEnd()))
+                                .collect(Collectors.toList())));
+            }
+            return new ArrayList<>(studentsWithAbsenInDateRangeDTO);
+        } catch (NoSuchElementException e) {
+            throw new StudentException("student not found");
+        }
     }
 }

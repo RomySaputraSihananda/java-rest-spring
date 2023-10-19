@@ -63,7 +63,7 @@ public class StudentAbsenController {
 
         @Operation(summary = "Get student with absen by id", description = "API for get student with absen by id")
         @GetMapping("/detail")
-        public ResponseEntity<BodyResponse<StudentModel>> GetAbsenStudent(
+        public ResponseEntity<BodyResponse<StudentModel>> GetAbsenDetailStudent(
                         @RequestParam(name = "id", defaultValue = "1", required = true) long id) {
 
                 return new ResponseEntity<>(
@@ -73,15 +73,20 @@ public class StudentAbsenController {
                                 HttpStatus.OK);
         }
 
-        @Operation(summary = "Get student with absen by id", description = "API for get student with absen by id")
-        @GetMapping("/test")
-        public ResponseEntity<BodyResponse<?>> GetAbsenStudentByRange(
-                        @RequestBody RangeDTO rangeDTO) {
+        @Operation(summary = "Get student data and absences by range date", description = "API for get student with absen by id")
+        @GetMapping("/between")
+        public ResponseEntity<BodyResponsePage<?>> GetAbsenStudentByRange(
+                        @RequestBody RangeDTO rangeDTO,
+                        @RequestParam(name = "page", defaultValue = "1") String page,
+                        @RequestParam(name = "size", defaultValue = "10") int size) {
 
                 return new ResponseEntity<>(
-                                new BodyResponse<>("ok", HttpStatus.OK.value(),
-                                                "data with absences id ",
-                                                this.studentAbsenService.getAbsenByRange(rangeDTO)),
+                                new BodyResponsePage<>("ok", HttpStatus.OK.value(),
+                                                "data with absences by range " + rangeDTO.getStart() + " - "
+                                                                + rangeDTO.getEnd(),
+                                                this.studentAbsenService.getAbsenByRange(rangeDTO,
+                                                                Integer.parseInt(page), size),
+                                                page),
                                 HttpStatus.OK);
         }
 }

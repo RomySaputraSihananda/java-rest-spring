@@ -2,12 +2,12 @@ CREATE USER 'java'@'localhost' IDENTIFIED BY 'java123';
 
 GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'java'@'localhost' WITH GRANT OPTION;
 
+DROP DATABASE IF EXISTS java;
 CREATE DATABASE java;
-
-DROP TABLE students;
 
 USE java;
 
+DROP TABLE IF EXISTS students;
 CREATE TABLE students (
     id int AUTO_INCREMENT PRIMARY KEY NOT NULL,
     name varchar(255) NOT NULL ,
@@ -37,7 +37,6 @@ INSERT INTO absen (keterangan, student_id) VALUES
 ('hadir', 8),('izin', 8),
 ('hadir', 9),('hadir', 9),
 ('alpha', 10),('alpha', 10);
-
 
 INSERT INTO students (name, age, city) VALUES
 ('Romy Saputra Sihananda', 17, 'Blitar'),
