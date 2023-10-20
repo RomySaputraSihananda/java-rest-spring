@@ -9,7 +9,6 @@ import org.romys.exception.StudentException;
 import org.romys.model.DAO.AbsenModel;
 import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.RangeDTO;
-import org.romys.model.DTO.StudentDTO;
 import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.repository.AbsenRepository;
 import org.romys.repository.StudentRepository;
@@ -26,9 +25,6 @@ public class StudentAbsenService {
 
     @Autowired
     private AbsenRepository absenRepository;
-
-    @Autowired
-    private StudentService studentService;
 
     public void absen(int id, String keterangan) {
         try {
@@ -69,31 +65,38 @@ public class StudentAbsenService {
 
     public ArrayList<StudentWithAbsenDTO> getAbsenByRange(RangeDTO rangeDTO, int page, int size) {
         try {
-            // return new ArrayList<>(
-            // this.studentRepository.findAllStudentsWithAbsenInDateRange(rangeDTO.getStart(),
-            // rangeDTO.getEnd()));
-            // List<StudentModel> studentsWithAbsen =
-            // studentRepository.findAllStudentsWithAbsenInDateRange(
-            // rangeDTO.getStart(),
-            // rangeDTO.getEnd());
-
             Pageable pageable = PageRequest.of(page - 1, size);
 
             Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
             List<StudentModel> studentList = studentPage.getContent();
 
-            List<StudentWithAbsenDTO> studentsWithAbsenInDateRangeDTO = new ArrayList<>();
-            for (StudentModel student : studentList) {
-
-                studentsWithAbsenInDateRangeDTO.add(new StudentWithAbsenDTO(student,
-                        student.getAbsen().stream()
-                                .filter(absen -> absen.getDate().after(rangeDTO.getStart())
-                                        && absen.getDate().before(rangeDTO.getEnd()))
-                                .collect(Collectors.toList())));
-            }
-            return new ArrayList<>(studentsWithAbsenInDateRangeDTO);
+            return new ArrayList<>(studentList.stream()
+                    .map(student -> new StudentWithAbsenDTO(
+                            student,
+                            student.getAbsen().stream()
+                                    .filter(absen -> absen.getDate().after(rangeDTO.getStart())
+                                            && absen.getDate().before(rangeDTO.getEnd()))
+                                    .collect(Collectors.toList())))
+                    .collect(Collectors.toList()));
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
+    }
+
+    public ArrayList<StudentWithAbsenDTO> getStudentByRange(RangeDTO rangeDTO, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<StudentModel> studentPage = this.studentRepository.findAllStudentsWithAbsenInDateRange(rangeDTO.getStart(),
+                rangeDTO.getEnd(), pageable);
+        List<StudentModel> studentList = studentPage.getContent();
+
+        return new ArrayList<>(studentList.stream()
+                .map(student -> new StudentWithAbsenDTO(
+                        student,
+                        student.getAbsen().stream()
+                                .filter(absen -> absen.getDate().after(rangeDTO.getStart())
+                                        && absen.getDate().before(rangeDTO.getEnd()))
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList()));
     }
 }

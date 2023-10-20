@@ -1,11 +1,11 @@
 package org.romys.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 
 import org.romys.model.DAO.AbsenModel;
 import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.RangeDTO;
+import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.payload.response.BodyResponse;
 import org.romys.payload.response.BodyResponsePage;
 import org.romys.service.StudentAbsenService;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1/student/absen")
@@ -74,19 +73,38 @@ public class StudentAbsenController {
         }
 
         @Operation(summary = "Get student data and absences by range date", description = "API for get student with absen by id")
-        @GetMapping("/between")
-        public ResponseEntity<BodyResponsePage<?>> GetAbsenStudentByRange(
-                        @RequestBody RangeDTO rangeDTO,
-                        @RequestParam(name = "page", defaultValue = "1") String page,
+        @GetMapping("/range")
+        public ResponseEntity<BodyResponsePage<StudentWithAbsenDTO>> GetAbsenStudentByRange(
+                        @RequestParam(name = "start", defaultValue = "2023-09-01 00:00:00") String start,
+                        @RequestParam(name = "end", defaultValue = "2023-10-01 00:00:00") String end,
+                        @RequestParam(name = "page", defaultValue = "1") int page,
                         @RequestParam(name = "size", defaultValue = "10") int size) {
 
                 return new ResponseEntity<>(
                                 new BodyResponsePage<>("ok", HttpStatus.OK.value(),
-                                                "data with absences by range " + rangeDTO.getStart() + " - "
-                                                                + rangeDTO.getEnd(),
-                                                this.studentAbsenService.getAbsenByRange(rangeDTO,
-                                                                Integer.parseInt(page), size),
-                                                page),
+                                                "data with absences by range " + start + " - "
+                                                                + end,
+                                                this.studentAbsenService.getAbsenByRange(new RangeDTO(start, end),
+                                                                page, size),
+                                                Integer.toString(page)),
+                                HttpStatus.OK);
+        }
+
+        @Operation(summary = "Get who is absent by date range", description = "API for get who is absent by date range")
+        @GetMapping("/by")
+        public ResponseEntity<BodyResponsePage<StudentWithAbsenDTO>> GetStudentByRange(
+                        @RequestParam(name = "start", defaultValue = "2023-09-01 00:00:00") String start,
+                        @RequestParam(name = "end", defaultValue = "2023-10-01 00:00:00") String end,
+                        @RequestParam(name = "page", defaultValue = "1") int page,
+                        @RequestParam(name = "size", defaultValue = "10") int size) {
+
+                return new ResponseEntity<>(
+                                new BodyResponsePage<>("ok", HttpStatus.OK.value(),
+                                                "data with absences by range " + start + " - "
+                                                                + end,
+                                                this.studentAbsenService.getStudentByRange(new RangeDTO(start, end),
+                                                                page, size),
+                                                Integer.toString(page)),
                                 HttpStatus.OK);
         }
 }

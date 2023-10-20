@@ -8,4 +8,9 @@ import lombok.Data;
 public class RangeDTO {
     private Timestamp start;
     private Timestamp end;
+
+    public RangeDTO(String start, String end) {
+        this.start = Timestamp.valueOf(start);
+        this.end = Timestamp.valueOf(end);
+    }
 }

@@ -19,4 +19,8 @@ public interface StudentRepository extends JpaRepository<StudentModel, Long> {
     @Query("SELECT s FROM StudentModel s INNER JOIN s.absen a WHERE a.date BETWEEN :start AND :end")
     List<StudentModel> findAllStudentsWithAbsenInDateRange(@Param("start") Timestamp start,
             @Param("end") Timestamp end);
+
+    @Query("SELECT s FROM StudentModel s INNER JOIN s.absen a WHERE a.date BETWEEN :start AND :end")
+    Page<StudentModel> findAllStudentsWithAbsenInDateRange(@Param("start") Timestamp start, @Param("end") Timestamp end,
+            Pageable pageable);
 }
