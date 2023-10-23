@@ -1,7 +1,5 @@
 package org.romys.controller;
 
-import java.sql.Timestamp;
-
 import org.romys.model.DAO.AbsenModel;
 import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.RangeDTO;
@@ -90,8 +88,8 @@ public class StudentAbsenController {
                                 HttpStatus.OK);
         }
 
-        @Operation(summary = "Get who is absent by date range", description = "API for get who is absent by date range")
-        @GetMapping("/by")
+        @Operation(summary = "Get who's is absent by date range", description = "API for get who is absent by date range")
+        @GetMapping("/whos")
         public ResponseEntity<BodyResponsePage<StudentWithAbsenDTO>> GetStudentByRange(
                         @RequestParam(name = "start", defaultValue = "2023-09-01 00:00:00") String start,
                         @RequestParam(name = "end", defaultValue = "2023-10-01 00:00:00") String end,

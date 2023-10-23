@@ -70,6 +70,14 @@ public class StudentService {
         }
     }
 
+    public ArrayList<StudentDTO> search(String name) {
+        try {
+            return new ArrayList<>(this.studentRepository.findByNameLike(name));
+        } catch (NoSuchElementException e) {
+            throw new StudentException("student not found");
+        }
+    }
+
     public ArrayList<StudentDTO> filter(ArrayList<StudentModel> studentModels) {
         return studentModels.stream()
                 .map(StudentDTO::new)

@@ -84,19 +84,25 @@ public class StudentAbsenService {
     }
 
     public ArrayList<StudentWithAbsenDTO> getStudentByRange(RangeDTO rangeDTO, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        try {
+            Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<StudentModel> studentPage = this.studentRepository.findAllStudentsWithAbsenInDateRange(rangeDTO.getStart(),
-                rangeDTO.getEnd(), pageable);
-        List<StudentModel> studentList = studentPage.getContent();
+            Page<StudentModel> studentPage = this.studentRepository.findAllStudentsInDateRangeInner(
+                    rangeDTO.getStart(),
+                    rangeDTO.getEnd(), pageable);
+            List<StudentModel> studentList = studentPage.getContent();
 
-        return new ArrayList<>(studentList.stream()
-                .map(student -> new StudentWithAbsenDTO(
-                        student,
-                        student.getAbsen().stream()
-                                .filter(absen -> absen.getDate().after(rangeDTO.getStart())
-                                        && absen.getDate().before(rangeDTO.getEnd()))
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toList()));
+            return new ArrayList<>(studentList.stream()
+                    .map(student -> new StudentWithAbsenDTO(
+                            student,
+                            student.getAbsen().stream()
+                                    .filter(absen -> absen.getDate().after(rangeDTO.getStart())
+                                            && absen.getDate().before(rangeDTO.getEnd()))
+                                    .collect(Collectors.toList())))
+                    .collect(Collectors.toList()));
+
+        } catch (NoSuchElementException e) {
+            throw new StudentException("student not found");
+        }
     }
 }

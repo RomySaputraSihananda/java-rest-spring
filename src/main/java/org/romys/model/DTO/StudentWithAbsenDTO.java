@@ -26,8 +26,8 @@ public class StudentWithAbsenDTO {
         this.age = studentModel.getAge();
         this.city = studentModel.getCity();
         this.created = studentModel.getCreated();
-        this.totalAbsen = absen.size();
         this.absen = studentModel.getAbsen();
+        this.totalAbsen = studentModel.getAbsen().size();
     }
 
     public StudentWithAbsenDTO(StudentModel studentModel, List<AbsenModel> absen) {

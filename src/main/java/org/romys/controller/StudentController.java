@@ -102,4 +102,14 @@ public class StudentController {
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil dihapus", null),
                                 HttpStatus.OK);
         }
+
+        @Operation(summary = "Search student info by name", description = "API for search student info by name")
+        @GetMapping("/search")
+        public ResponseEntity<BodyResponse<StudentDTO>> searchStudent(
+                        @RequestParam(name = "name", required = true) String name) {
+                return new ResponseEntity<>(
+                                new BodyResponse<>("ok", HttpStatus.OK.value(), "data",
+                                                this.studentService.search(name)),
+                                HttpStatus.OK);
+        }
 }

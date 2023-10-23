@@ -26,18 +26,6 @@ CREATE TABLE absen (
     FOREIGN KEY (student_id) REFERENCES students(id)
 );
 
-INSERT INTO absen (keterangan, student_id) VALUES
-('hadir', 1),('hadir', 1),
-('hadir', 2),('izin', 2),
-('hadir', 3),('hadir', 3),
-('hadir', 4),('izin', 4),
-('hadir', 5),('hadir', 5),
-('hadir', 6),('alpha', 6),
-('hadir', 7),('hadir', 7),
-('hadir', 8),('izin', 8),
-('hadir', 9),('hadir', 9),
-('alpha', 10),('alpha', 10);
-
 INSERT INTO students (name, age, city) VALUES
 ('Romy Saputra Sihananda', 17, 'Blitar'),
 ('Laraine Hinako Terralyn', 17, 'Macon'),
