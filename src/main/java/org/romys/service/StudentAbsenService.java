@@ -67,17 +67,15 @@ public class StudentAbsenService {
         try {
             Pageable pageable = PageRequest.of(page - 1, size);
 
-            Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+            Page<StudentModel> studentPage = this.studentRepository.findAllStudentsInDateRangeLeft(
+                    rangeDTO.getStart(),
+                    rangeDTO.getEnd(), pageable);
+
+            // Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+
             List<StudentModel> studentList = studentPage.getContent();
 
-            return new ArrayList<>(studentList.stream()
-                    .map(student -> new StudentWithAbsenDTO(
-                            student,
-                            student.getAbsen().stream()
-                                    .filter(absen -> absen.getDate().after(rangeDTO.getStart())
-                                            && absen.getDate().before(rangeDTO.getEnd()))
-                                    .collect(Collectors.toList())))
-                    .collect(Collectors.toList()));
+            return filterDate(studentList, rangeDTO);
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
@@ -90,19 +88,23 @@ public class StudentAbsenService {
             Page<StudentModel> studentPage = this.studentRepository.findAllStudentsInDateRangeInner(
                     rangeDTO.getStart(),
                     rangeDTO.getEnd(), pageable);
+
             List<StudentModel> studentList = studentPage.getContent();
-
-            return new ArrayList<>(studentList.stream()
-                    .map(student -> new StudentWithAbsenDTO(
-                            student,
-                            student.getAbsen().stream()
-                                    .filter(absen -> absen.getDate().after(rangeDTO.getStart())
-                                            && absen.getDate().before(rangeDTO.getEnd()))
-                                    .collect(Collectors.toList())))
-                    .collect(Collectors.toList()));
-
+            System.out.println(studentList.size());
+            return filterDate(studentList, rangeDTO);
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
+    }
+
+    public ArrayList<StudentWithAbsenDTO> filterDate(List<StudentModel> studentList, RangeDTO rangeDTO) {
+        return new ArrayList<>(studentList.stream()
+                .map(student -> new StudentWithAbsenDTO(
+                        student,
+                        student.getAbsen().stream()
+                                .filter(absen -> absen.getDate().after(rangeDTO.getStart())
+                                        && absen.getDate().before(rangeDTO.getEnd()))
+                                .collect(Collectors.toList())))
+                .collect(Collectors.toList()));
     }
 }
