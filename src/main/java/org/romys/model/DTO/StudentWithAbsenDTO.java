@@ -17,8 +17,7 @@ public class StudentWithAbsenDTO {
     private int age;
     private String city;
     private Timestamp created;
-    private int totalAbsen;
-    private List<AbsenModel> absen;
+    private AbsenDTO absen;
 
     public StudentWithAbsenDTO(StudentModel studentModel) {
         this.id = studentModel.getId();
@@ -26,17 +25,15 @@ public class StudentWithAbsenDTO {
         this.age = studentModel.getAge();
         this.city = studentModel.getCity();
         this.created = studentModel.getCreated();
-        this.absen = studentModel.getAbsen();
-        this.totalAbsen = studentModel.getAbsen().size();
+        // this.absen = studentModel.getAbsen();
     }
 
-    public StudentWithAbsenDTO(StudentModel studentModel, List<AbsenModel> absen) {
+    public StudentWithAbsenDTO(StudentModel studentModel, AbsenDTO absen) {
         this.id = studentModel.getId();
         this.name = studentModel.getName();
         this.age = studentModel.getAge();
         this.city = studentModel.getCity();
         this.created = studentModel.getCreated();
-        this.totalAbsen = absen.size();
         this.absen = absen;
     }
 }

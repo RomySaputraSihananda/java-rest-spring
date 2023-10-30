@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,49 +61,42 @@ public class StudentAbsenController {
 
         @Operation(summary = "Get student with absen by id", description = "API for get student with absen by id")
         @GetMapping("/detail")
-        public ResponseEntity<BodyResponse<StudentModel>> GetAbsenDetailStudent(
-                        @RequestParam(name = "id", defaultValue = "1", required = true) long id) {
+        public ResponseEntity<BodyResponse<StudentWithAbsenDTO>> GetAbsenDetailStudent(
+                        @RequestParam(name = "id", defaultValue = "1", required = true) long id,
+                        @RequestParam(name = "pageAbsen", defaultValue = "1", required = true) int pageAbsen,
+                        @RequestParam(name = "sizeAbsen", defaultValue = "10", required = true) int sizeAbsen) {
 
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(),
                                                 "data with absences id " + id,
-                                                this.studentAbsenService.getAbsenById(id)),
+                                                this.studentAbsenService.getAbsenById(id, pageAbsen, sizeAbsen)),
                                 HttpStatus.OK);
         }
 
         @Operation(summary = "Get student data and absences by range date", description = "API for get student with absen by id")
-        @GetMapping("/range")
-        public ResponseEntity<BodyResponsePage<StudentWithAbsenDTO>> GetAbsenStudentByRange(
-                        @RequestParam(name = "start", defaultValue = "2023-09-01 00:00:00") String start,
-                        @RequestParam(name = "end", defaultValue = "2023-10-01 00:00:00") String end,
-                        @RequestParam(name = "page", defaultValue = "1") int page,
-                        @RequestParam(name = "size", defaultValue = "10") int size) {
+        @PostMapping("/range")
+        public ResponseEntity<BodyResponsePage<?>> GetAbsenStudentByRange(
+                        @RequestBody(required = true) RangeDTO rangeDTO) {
 
                 return new ResponseEntity<>(
                                 new BodyResponsePage<>("ok", HttpStatus.OK.value(),
-                                                "data with absences by range " + start + " - "
-                                                                + end,
-                                                this.studentAbsenService.getAbsenByRange(new RangeDTO(start, end),
-                                                                page, size),
-                                                Integer.toString(page)),
+                                                "data with absences by range " + rangeDTO.getStart() + " - "
+                                                                + rangeDTO.getEnd(),
+                                                this.studentAbsenService.getAbsenByRange(rangeDTO),
+                                                Integer.toString(rangeDTO.getPage())),
                                 HttpStatus.OK);
         }
 
         @Operation(summary = "Get who's is absent by date range", description = "API for get who is absent by date range")
-        @GetMapping("/whos")
-        public ResponseEntity<BodyResponsePage<StudentWithAbsenDTO>> GetStudentByRange(
-                        @RequestParam(name = "start", defaultValue = "2023-09-01 00:00:00") String start,
-                        @RequestParam(name = "end", defaultValue = "2023-10-01 00:00:00") String end,
-                        @RequestParam(name = "page", defaultValue = "1") int page,
-                        @RequestParam(name = "size", defaultValue = "10") int size) {
+        @PostMapping("/whos")
+        public ResponseEntity<BodyResponsePage<?>> GetStudentByRange(@RequestBody(required = true) RangeDTO rangeDTO) {
 
                 return new ResponseEntity<>(
                                 new BodyResponsePage<>("ok", HttpStatus.OK.value(),
-                                                "data with absences by range " + start + " - "
-                                                                + end,
-                                                this.studentAbsenService.getStudentByRange(new RangeDTO(start, end),
-                                                                page, size),
-                                                Integer.toString(page)),
+                                                "data with absences by range " + rangeDTO.getStart() + " - "
+                                                                + rangeDTO.getEnd(),
+                                                this.studentAbsenService.getStudentByRange(rangeDTO),
+                                                Integer.toString(rangeDTO.getPage())),
                                 HttpStatus.OK);
         }
 }

@@ -3,8 +3,10 @@ package org.romys.payload.response;
 import java.util.ArrayList;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BodyResponsePage<Student> extends BodyResponse<Student> {
     private String page;
     private int dataLength;
