@@ -62,7 +62,7 @@ public class StudentAbsenController {
         @Operation(summary = "Get student with absen by id", description = "API for get student with absen by id")
         @GetMapping("/detail")
         public ResponseEntity<BodyResponse<StudentWithAbsenDTO>> GetAbsenDetailStudent(
-                        @RequestParam(name = "id", defaultValue = "1", required = true) long id,
+                        @RequestParam(name = "id", defaultValue = "1", required = true) int id,
                         @RequestParam(name = "pageAbsen", defaultValue = "1", required = true) int pageAbsen,
                         @RequestParam(name = "sizeAbsen", defaultValue = "10", required = true) int sizeAbsen) {
 

@@ -11,7 +11,6 @@ import org.romys.model.DAO.AbsenModel;
 import org.romys.model.DAO.StudentModel;
 import org.romys.model.DTO.AbsenDTO;
 import org.romys.model.DTO.RangeDTO;
-import org.romys.model.DTO.StudentDTO;
 import org.romys.model.DTO.StudentWithAbsenDTO;
 import org.romys.repository.AbsenRepository;
 import org.romys.repository.StudentRepository;
@@ -58,7 +57,7 @@ public class StudentAbsenService {
         }
     }
 
-    public ArrayList<StudentWithAbsenDTO> getAbsenById(long id, int pageAbsen, int sizeAbsen) {
+    public ArrayList<StudentWithAbsenDTO> getAbsenById(int id, int pageAbsen, int sizeAbsen) {
         try {
             StudentModel student = this.studentRepository.findById(id).get();
             return new ArrayList<StudentWithAbsenDTO>(
@@ -68,21 +67,21 @@ public class StudentAbsenService {
         }
     }
 
-    public ArrayList<StudentWithAbsenDTO> getAbsenByRange(RangeDTO rangeDTO) {
+    public ArrayList<?> getAbsenByRange(RangeDTO rangeDTO) {
         try {
             Pageable pageable = PageRequest.of(rangeDTO.getPage() - 1, rangeDTO.getSize());
 
-            // Page<StudentModel> studentPage =
-            // this.studentRepository.findAllStudentsInDateRangeLeft(
-            // Timestamp.valueOf(rangeDTO.getStart()),
-            // Timestamp.valueOf(rangeDTO.getEnd()), pageable);
+            Page<Object[]> studentPage = this.studentRepository.findAllStudentsInDateRangeLeft2(
+                    Timestamp.valueOf(rangeDTO.getStart()),
+                    Timestamp.valueOf(rangeDTO.getEnd()), pageable);
 
-            Page<StudentModel> studentPage = this.studentRepository.findAll(pageable);
+            List<Object[]> studentList = studentPage.getContent();
 
-            List<StudentModel> studentList = studentPage.getContent();
-            // System.out.println(studentList.size());
+            return new ArrayList<>(
+                    studentList.stream()
+                            .map(e -> e[1])
+                            .collect(Collectors.toList()));
 
-            return filterDate(studentList, rangeDTO);
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
@@ -98,13 +97,17 @@ public class StudentAbsenService {
 
             List<StudentModel> studentList = studentPage.getContent();
 
-            return filterDate(studentList, rangeDTO);
+            return new ArrayList<>(studentList.stream()
+                    .map(student -> new StudentWithAbsenDTO(
+                            student,
+                            new AbsenDTO(student.getAbsen(), rangeDTO.getPageAbsen(), rangeDTO.getSizeAbsen())))
+                    .collect(Collectors.toList()));
         } catch (NoSuchElementException e) {
             throw new StudentException("student not found");
         }
     }
 
-    public ArrayList<StudentWithAbsenDTO> filterDate(List<StudentModel> studentList, RangeDTO rangeDTO) {
+    private ArrayList<StudentWithAbsenDTO> filterDate(List<StudentModel> studentList, RangeDTO rangeDTO) {
         return new ArrayList<>(studentList.stream()
                 .map(student -> new StudentWithAbsenDTO(
                         student, new AbsenDTO(student.getAbsen().stream()
@@ -114,9 +117,14 @@ public class StudentAbsenService {
                 .collect(Collectors.toList()));
     }
 
-    public ArrayList<StudentWithAbsenDTO> filter(ArrayList<StudentModel> studentModels) {
-        return studentModels.stream()
-                .map(StudentWithAbsenDTO::new)
-                .collect(Collectors.toCollection(ArrayList::new));
+    private AbsenDTO generateAbsen(AbsenModel absenModel, RangeDTO rangeDTO) {
+        if (absenModel == null) {
+            List<AbsenModel> absenModelList = new ArrayList<AbsenModel>(List.of(absenModel));
+
+            return new AbsenDTO(absenModelList, rangeDTO.getPageAbsen(),
+                    rangeDTO.getSizeAbsen());
+        } else {
+            return null;
+        }
     }
 }

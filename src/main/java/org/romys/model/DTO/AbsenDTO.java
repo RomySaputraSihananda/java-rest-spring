@@ -1,5 +1,6 @@
 package org.romys.model.DTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,10 +17,13 @@ public class AbsenDTO {
     private int totalAbsen;
 
     public AbsenDTO(List<AbsenModel> absen, int page, int size) {
-        this.data = Page(absen, page, size);
+        List<AbsenModel> newAbsen = absen == null ? new ArrayList<AbsenModel>() : absen;
+
+        this.data = Page(newAbsen, page, size);
+        this.data = absen;
         this.page = page;
         this.size = size;
-        this.totalAbsen = absen.size();
+        this.totalAbsen = newAbsen.size();
     }
 
     private List<AbsenModel> Page(List<AbsenModel> absen, int page, int size) {

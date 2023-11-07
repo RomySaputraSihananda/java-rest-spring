@@ -24,15 +24,15 @@ public class AbsenModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "keterangan")
+    @Column(name = "keterangan", nullable = false)
     private String keterangan;
 
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Timestamp date;
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "student_id")
+    @JoinColumn(name = "student_id", nullable = false)
     private StudentModel student;
 
     public AbsenModel(String keterangan, int student_id) {

@@ -15,17 +15,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentRepository extends JpaRepository<StudentModel, Long> {
+public interface StudentRepository extends JpaRepository<StudentModel, Integer> {
         Page<StudentModel> findAll(Pageable pageable);
 
         @Query("SELECT s FROM StudentModel s WHERE s.name LIKE :name% ORDER BY s.name")
         List<StudentDTO> findByNameLike(@Param("name") String name);
 
-        @Query("SELECT s FROM StudentModel s INNER JOIN s.absen a WHERE a.date BETWEEN :start AND :end")
+        @Query("SELECT s FROM StudentModel s INNER JOIN FETCH s.absen a WHERE a.date BETWEEN :start AND :end")
         Page<StudentModel> findAllStudentsInDateRangeInner(@Param("start") Timestamp start,
                         @Param("end") Timestamp end, Pageable pageable);
 
-        @Query("SELECT s FROM StudentModel s LEFT JOIN s.absen a WHERE a.date BETWEEN :start AND :end")
+        @Query("SELECT s FROM StudentModel s LEFT JOIN FETCH s.absen a WHERE (a.date BETWEEN :start AND :end) OR a IS NULL")
         Page<StudentModel> findAllStudentsInDateRangeLeft(@Param("start") Timestamp start,
                         @Param("end") Timestamp end, Pageable pageable);
+
+        @Query("SELECT s, a FROM StudentModel s LEFT JOIN s.absen a ON a.date BETWEEN :start AND :end OR a IS NULL")
+        Page<Object[]> findAllStudentsInDateRangeLeft2(@Param("start") Timestamp start,
+                        @Param("end") Timestamp end, Pageable pageable);
+
 }

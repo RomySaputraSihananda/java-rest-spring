@@ -66,7 +66,7 @@ public class StudentController {
         @Operation(summary = "Get student info by id", description = "API for get student info by id")
         @GetMapping("/detail")
         public ResponseEntity<BodyResponse<?>> getStudentById(
-                        @RequestParam(name = "id", defaultValue = "1") long id) {
+                        @RequestParam(name = "id", defaultValue = "1") int id) {
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data by id " + id,
                                                 this.studentService.readStudentsById(id)),
@@ -86,7 +86,7 @@ public class StudentController {
         @Operation(summary = "Update student info", description = "API for update student info")
         @PutMapping
         public ResponseEntity<BodyResponse<?>> updateStudent(
-                        @RequestParam(name = "id", defaultValue = "1", required = true) long id,
+                        @RequestParam(name = "id", defaultValue = "1", required = true) int id,
                         @RequestBody(required = true) StudentDTO body) {
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil ditambah",
@@ -97,7 +97,7 @@ public class StudentController {
         @Operation(summary = "Delete student info", description = "API for delete student info")
         @DeleteMapping
         public ResponseEntity<BodyResponse<StudentModel>> deleteStudent(
-                        @RequestParam(name = "id", defaultValue = "1", required = true) long id) {
+                        @RequestParam(name = "id", defaultValue = "1", required = true) int id) {
                 this.studentService.deleteStudent(id);
                 return new ResponseEntity<>(
                                 new BodyResponse<>("ok", HttpStatus.OK.value(), "data berhasil dihapus", null),

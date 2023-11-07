@@ -33,7 +33,7 @@ public class StudentService {
         return filter(new ArrayList<>(studentList));
     }
 
-    public ArrayList<StudentDTO> readStudentsById(long id) {
+    public ArrayList<StudentDTO> readStudentsById(int id) {
         try {
             return filter(new ArrayList<>(List.of(this.studentRepository.findById(id).get())));
         } catch (NoSuchElementException e) {
@@ -45,7 +45,7 @@ public class StudentService {
         this.studentRepository.save(new StudentModel(studentDTO));
     }
 
-    public ArrayList<StudentDTO> updateStudent(long id, StudentModel newStudentModel) {
+    public ArrayList<StudentDTO> updateStudent(int id, StudentModel newStudentModel) {
         try {
             StudentModel oldStudentModel = this.studentRepository.findById(id).get();
 
@@ -62,7 +62,7 @@ public class StudentService {
 
     }
 
-    public void deleteStudent(long id) {
+    public void deleteStudent(int id) {
         try {
             this.studentRepository.deleteById(id);
         } catch (NoSuchElementException e) {
